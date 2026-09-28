@@ -13,6 +13,7 @@ COMMENT_SIZE = 7
 CACHE_FILENAME = 'cache/' + hashlib.sha256(USER_NAME.encode('utf-8')).hexdigest() + '.txt'
 QUERY_COUNT = {'user_getter': 0, 'follower_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'loc_query': 0}
 OWNER_ID = None  # Resolved from the API at startup, filters which commits count as mine
+DROPPED_NODES = 0  # Repositories GitHub returned without a node; the token cannot read them
 
 
 def simple_request(func_name, query, variables):
@@ -25,9 +26,26 @@ def simple_request(func_name, query, variables):
     raise Exception(func_name, ' has failed with a', request.status_code, request.text, QUERY_COUNT)
 
 
-def graph_repos_stars(count_type, owner_affiliation, cursor=None):
+def sanitize_edges(edges):
+    """
+    Drops edges whose node is null. GitHub returns these for repositories the token
+    cannot read, and for forks whose parent repository was deleted. They must be
+    removed before the cache is written, or cache rows desynchronise from the edges.
+    """
+    global DROPPED_NODES
+    valid = []
+    for edge in edges:
+        if edge and edge.get('node'):
+            valid.append(edge)
+        else:
+            DROPPED_NODES += 1
+    return valid
+
+
+def graph_repos_stars(count_type, owner_affiliation, cursor=None, edges=None):
     """
     Uses GitHub's GraphQL v4 API to return my total repository or star count.
+    Follows pageInfo, because a single page holds at most 100 repositories.
     """
     query_count('graph_repos_stars')
     query = '''
@@ -45,14 +63,24 @@ def graph_repos_stars(count_type, owner_affiliation, cursor=None):
                         }
                     }
                 }
+                pageInfo {
+                    endCursor
+                    hasNextPage
+                }
             }
         }
     }'''
     variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, 'cursor': cursor}
     request = simple_request(graph_repos_stars.__name__, query, variables)
+    repositories = request.json()['data']['user']['repositories']
+    if count_type == 'repos' and cursor is None:
+        return repositories['totalCount']  # totalCount is the real total, no paging needed
+    edges = (edges or []) + sanitize_edges(repositories['edges'])
+    if repositories['pageInfo']['hasNextPage']:
+        return graph_repos_stars(count_type, owner_affiliation, repositories['pageInfo']['endCursor'], edges)
     if count_type == 'repos':
-        return request.json()['data']['user']['repositories']['totalCount']
-    return stars_counter(request.json()['data']['user']['repositories']['edges'])
+        return len(edges)
+    return stars_counter(edges)
 
 
 def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, deletion_total=0, my_commits=0, cursor=None):
@@ -161,7 +189,7 @@ def loc_query(owner_affiliation, comment_size=0, force_cache=False, cursor=None,
     if request.json()['data']['user']['repositories']['pageInfo']['hasNextPage']:  # If repository data has another page
         edges += request.json()['data']['user']['repositories']['edges']
         return loc_query(owner_affiliation, comment_size, force_cache, request.json()['data']['user']['repositories']['pageInfo']['endCursor'], edges)
-    return cache_builder(edges + request.json()['data']['user']['repositories']['edges'], comment_size, force_cache)
+    return cache_builder(sanitize_edges(edges + request.json()['data']['user']['repositories']['edges']), comment_size, force_cache)
 
 
 def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
@@ -191,15 +219,17 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
     data = data[comment_size:]  # Remove those lines
     for index in range(len(edges)):
         repo_hash, commit_count, *_ = data[index].split()
-        if repo_hash == hashlib.sha256(edges[index]['node']['nameWithOwner'].encode('utf-8')).hexdigest():
-            try:
-                if int(commit_count) != edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']:
-                    # If the commit count has changed, update the LOC for that repo
-                    owner, repo_name = edges[index]['node']['nameWithOwner'].split('/')
-                    loc = recursive_loc(owner, repo_name, data, cache_comment)
-                    data[index] = repo_hash + ' ' + str(edges[index]['node']['defaultBranchRef']['target']['history']['totalCount']) + ' ' + str(loc[2]) + ' ' + str(loc[0]) + ' ' + str(loc[1]) + '\n'
-            except TypeError:  # If the repo is empty
-                data[index] = repo_hash + ' 0 0 0 0\n'
+        if repo_hash != hashlib.sha256(edges[index]['node']['nameWithOwner'].encode('utf-8')).hexdigest():
+            continue  # Cache row order drifted, leave this row untouched
+        default_branch = edges[index]['node']['defaultBranchRef']
+        if default_branch is None:
+            data[index] = repo_hash + ' 0 0 0 0\n'  # Empty repo, no commits to count
+            continue
+        total_commits = default_branch['target']['history']['totalCount']
+        if int(commit_count) != total_commits:
+            owner, repo_name = edges[index]['node']['nameWithOwner'].split('/')
+            loc = recursive_loc(owner, repo_name, data, cache_comment)
+            data[index] = repo_hash + ' ' + str(total_commits) + ' ' + str(loc[2]) + ' ' + str(loc[0]) + ' ' + str(loc[1]) + '\n'
     with open(CACHE_FILENAME, 'w') as f:
         f.writelines(cache_comment)
         f.writelines(data)
@@ -241,8 +271,9 @@ def stars_counter(data):
     Count total stars in repositories owned by me
     """
     total_stars = 0
-    for node in data:
-        total_stars += node['node']['stargazers']['totalCount']
+    for edge in data:
+        if edge and edge.get('node') and edge['node'].get('stargazers'):
+            total_stars += edge['node']['stargazers']['totalCount']
     return total_stars
 
 
@@ -397,3 +428,7 @@ if __name__ == '__main__':
     print('Total GitHub GraphQL API calls:', '{:>3}'.format(sum(QUERY_COUNT.values())))
     for funct_name, count in QUERY_COUNT.items():
         print('{:<28}'.format('   ' + funct_name + ':'), '{:>6}'.format(count))
+
+    if DROPPED_NODES:
+        print('\nWARNING: skipped', DROPPED_NODES, 'unreadable repositories. Stats are partial.')
+        print('Check that the token grants All repositories + read:Contents, and that org SSO is authorized.')
