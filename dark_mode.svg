@@ -14,6 +14,73 @@ size-adjust: 109%;
 .delColor {fill: #f85149;}
 .cc {fill: #616e7f;}
 text, tspan {white-space: pre;}
+.ascii > tspan { opacity: 1; animation: lineIn 200ms ease-out backwards; }
+@keyframes lineIn { from { opacity: 0; } to { opacity: 1; } }
+.ascii > tspan:nth-child(1) { animation-delay: 0ms; }
+.ascii > tspan:nth-child(2) { animation-delay: 45ms; }
+.ascii > tspan:nth-child(3) { animation-delay: 90ms; }
+.ascii > tspan:nth-child(4) { animation-delay: 135ms; }
+.ascii > tspan:nth-child(5) { animation-delay: 180ms; }
+.ascii > tspan:nth-child(6) { animation-delay: 225ms; }
+.ascii > tspan:nth-child(7) { animation-delay: 270ms; }
+.ascii > tspan:nth-child(8) { animation-delay: 315ms; }
+.ascii > tspan:nth-child(9) { animation-delay: 360ms; }
+.ascii > tspan:nth-child(10) { animation-delay: 405ms; }
+.ascii > tspan:nth-child(11) { animation-delay: 450ms; }
+.ascii > tspan:nth-child(12) { animation-delay: 495ms; }
+.ascii > tspan:nth-child(13) { animation-delay: 540ms; }
+.ascii > tspan:nth-child(14) { animation-delay: 585ms; }
+.ascii > tspan:nth-child(15) { animation-delay: 630ms; }
+.ascii > tspan:nth-child(16) { animation-delay: 675ms; }
+.ascii > tspan:nth-child(17) { animation-delay: 720ms; }
+.ascii > tspan:nth-child(18) { animation-delay: 765ms; }
+.ascii > tspan:nth-child(19) { animation-delay: 810ms; }
+.ascii > tspan:nth-child(20) { animation-delay: 855ms; }
+.ascii > tspan:nth-child(21) { animation-delay: 900ms; }
+.ascii > tspan:nth-child(22) { animation-delay: 945ms; }
+.ascii > tspan:nth-child(23) { animation-delay: 990ms; }
+.ascii > tspan:nth-child(24) { animation-delay: 1035ms; }
+.ascii > tspan:nth-child(25) { animation-delay: 1080ms; }
+.ascii > tspan:nth-child(26) { animation-delay: 1125ms; }
+.ascii > tspan:nth-child(27) { animation-delay: 1170ms; }
+.ascii > tspan:nth-child(28) { animation-delay: 1215ms; }
+.ascii > tspan:nth-child(29) { animation-delay: 1260ms; }
+.ascii > tspan:nth-child(30) { animation-delay: 1305ms; }
+.ascii > tspan:nth-child(31) { animation-delay: 1350ms; }
+.ascii > tspan:nth-child(32) { animation-delay: 1395ms; }
+.ascii > tspan:nth-child(33) { animation-delay: 1440ms; }
+.ascii > tspan:nth-child(34) { animation-delay: 1485ms; }
+.ascii > tspan:nth-child(35) { animation-delay: 1530ms; }
+.ascii > tspan:nth-child(36) { animation-delay: 1575ms; }
+.ascii > tspan:nth-child(37) { animation-delay: 1620ms; }
+.ascii > tspan:nth-child(38) { animation-delay: 1665ms; }
+.ascii > tspan:nth-child(39) { animation-delay: 1710ms; }
+.ascii > tspan:nth-child(40) { animation-delay: 1755ms; }
+.ascii > tspan:nth-child(41) { animation-delay: 1800ms; }
+.ascii > tspan:nth-child(42) { animation-delay: 1845ms; }
+.ascii > tspan:nth-child(43) { animation-delay: 1890ms; }
+.ascii > tspan:nth-child(44) { animation-delay: 1935ms; }
+.ascii > tspan:nth-child(45) { animation-delay: 1980ms; }
+.ascii > tspan:nth-child(46) { animation-delay: 2025ms; }
+.ascii > tspan:nth-child(47) { animation-delay: 2070ms; }
+.ascii > tspan:nth-child(48) { animation-delay: 2115ms; }
+.ascii > tspan:nth-child(49) { animation-delay: 2160ms; }
+.ascii > tspan:nth-child(50) { animation-delay: 2205ms; }
+.ascii > tspan:nth-child(51) { animation-delay: 2250ms; }
+.ascii > tspan:nth-child(52) { animation-delay: 2295ms; }
+.ascii > tspan:nth-child(53) { animation-delay: 2340ms; }
+.ascii > tspan:nth-child(54) { animation-delay: 2385ms; }
+.ascii > tspan:nth-child(55) { animation-delay: 2430ms; }
+.ascii > tspan:nth-child(56) { animation-delay: 2475ms; }
+.ascii > tspan:nth-child(57) { animation-delay: 2520ms; }
+.ascii > tspan:nth-child(58) { animation-delay: 2565ms; }
+.ascii > tspan:nth-child(59) { animation-delay: 2610ms; }
+.ascii > tspan:nth-child(60) { animation-delay: 2655ms; }
+.avatar-cursor { animation: cursorTravel 2700ms linear forwards, cursorBlink 530ms steps(1) infinite, cursorHide 300ms ease-out 2700ms forwards; }
+@keyframes cursorTravel { from { transform: translateY(0px); } to { transform: translateY(472px); } }
+@keyframes cursorBlink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes cursorHide { from { opacity: 1; } to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .ascii > tspan, .avatar-cursor { animation: none !important; opacity: 1 !important; transform: none !important; } }
 </style>
 <rect width="985px" height="530px" fill="#161b22" rx="15"/>
 <text x="15" y="30" fill="#c9d1d9" class="ascii" font-size="6.4px">
@@ -78,6 +145,7 @@ text, tspan {white-space: pre;}
 <tspan x="15" y="494" textLength="370.0" lengthAdjust="spacing">                      ft=Xhoao**#Licpwwwwwwwwqpdbkhao*#***####*#MWMab*%%%%%%%%%%%%%%%%%%%8888888888Wbp  </tspan>
 <tspan x="15" y="502" textLength="370.0" lengthAdjust="spacing">                  vUJJxtxkaooo*W8%Mrvqpqqqqqqqqdkhhao*****##MM##okhMBBBBBBBBBBBBBBBBBBB%%%%%%%%%%%%%%%%B</tspan>
 </text>
+<rect class="avatar-cursor" x="15" y="23" width="7" height="10" fill="#c9d1d9"/>
 <text x="390" y="30" fill="#c9d1d9">
 <tspan x="390" y="30">ryan@millano</tspan> -———————————————————————————————————————-—————
 <tspan x="390" y="50" class="cc">. </tspan><tspan class="key">OS</tspan>:<tspan class="cc"> ............................ </tspan><tspan class="value">Windows 11, Fedora Linux</tspan>
