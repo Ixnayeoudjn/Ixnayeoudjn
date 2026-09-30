@@ -14,7 +14,7 @@ size-adjust: 109%;
 .delColor {fill: #cf222e;}
 .cc {fill: #c2cfde;}
 text, tspan {white-space: pre;}
-.ascii &gt; tspan { opacity: 1; animation: lineIn 200ms ease-out backwards; }
+.ascii &gt; tspan { opacity: 1; animation: lineIn 1ms steps(1, end) backwards; }
 @keyframes lineIn { from { opacity: 0; } to { opacity: 1; } }
 .ascii &gt; tspan:nth-child(1) { animation-delay: 0ms; }
 .ascii &gt; tspan:nth-child(2) { animation-delay: 45ms; }
@@ -80,7 +80,98 @@ text, tspan {white-space: pre;}
 @keyframes cursorTravel { from { transform: translateY(0px); } to { transform: translateY(472px); } }
 @keyframes cursorBlink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 @keyframes cursorHide { from { opacity: 1; } to { opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .ascii &gt; tspan, .avatar-cursor { animation: none !important; opacity: 1 !important; transform: none !important; } }
+.info &gt; tspan { opacity: 1; animation: lineIn 1ms steps(1, end) backwards; }
+.info &gt; tspan:nth-child(1) { animation-delay: 1000ms; }
+.info &gt; tspan:nth-child(2) { animation-delay: 1025ms; }
+.info &gt; tspan:nth-child(3) { animation-delay: 1050ms; }
+.info &gt; tspan:nth-child(4) { animation-delay: 1075ms; }
+.info &gt; tspan:nth-child(5) { animation-delay: 1100ms; }
+.info &gt; tspan:nth-child(6) { animation-delay: 1125ms; }
+.info &gt; tspan:nth-child(7) { animation-delay: 1150ms; }
+.info &gt; tspan:nth-child(8) { animation-delay: 1175ms; }
+.info &gt; tspan:nth-child(9) { animation-delay: 1200ms; }
+.info &gt; tspan:nth-child(10) { animation-delay: 1225ms; }
+.info &gt; tspan:nth-child(11) { animation-delay: 1250ms; }
+.info &gt; tspan:nth-child(12) { animation-delay: 1275ms; }
+.info &gt; tspan:nth-child(13) { animation-delay: 1300ms; }
+.info &gt; tspan:nth-child(14) { animation-delay: 1325ms; }
+.info &gt; tspan:nth-child(15) { animation-delay: 1350ms; }
+.info &gt; tspan:nth-child(16) { animation-delay: 1375ms; }
+.info &gt; tspan:nth-child(17) { animation-delay: 1400ms; }
+.info &gt; tspan:nth-child(18) { animation-delay: 1425ms; }
+.info &gt; tspan:nth-child(19) { animation-delay: 1450ms; }
+.info &gt; tspan:nth-child(20) { animation-delay: 1475ms; }
+.info &gt; tspan:nth-child(21) { animation-delay: 1500ms; }
+.info &gt; tspan:nth-child(22) { animation-delay: 1525ms; }
+.info &gt; tspan:nth-child(23) { animation-delay: 1550ms; }
+.info &gt; tspan:nth-child(24) { animation-delay: 1575ms; }
+.info &gt; tspan:nth-child(25) { animation-delay: 1600ms; }
+.info &gt; tspan:nth-child(26) { animation-delay: 1625ms; }
+.info &gt; tspan:nth-child(27) { animation-delay: 1650ms; }
+.info &gt; tspan:nth-child(28) { animation-delay: 1675ms; }
+.info &gt; tspan:nth-child(29) { animation-delay: 1700ms; }
+.info &gt; tspan:nth-child(30) { animation-delay: 1725ms; }
+.info &gt; tspan:nth-child(31) { animation-delay: 1750ms; }
+.info &gt; tspan:nth-child(32) { animation-delay: 1775ms; }
+.info &gt; tspan:nth-child(33) { animation-delay: 1800ms; }
+.info &gt; tspan:nth-child(34) { animation-delay: 1825ms; }
+.info &gt; tspan:nth-child(35) { animation-delay: 1850ms; }
+.info &gt; tspan:nth-child(36) { animation-delay: 1875ms; }
+.info &gt; tspan:nth-child(37) { animation-delay: 1900ms; }
+.info &gt; tspan:nth-child(38) { animation-delay: 1925ms; }
+.info &gt; tspan:nth-child(39) { animation-delay: 1950ms; }
+.info &gt; tspan:nth-child(40) { animation-delay: 1975ms; }
+.info &gt; tspan:nth-child(41) { animation-delay: 2000ms; }
+.info &gt; tspan:nth-child(42) { animation-delay: 2025ms; }
+.info &gt; tspan:nth-child(43) { animation-delay: 2050ms; }
+.info &gt; tspan:nth-child(44) { animation-delay: 2075ms; }
+.info &gt; tspan:nth-child(45) { animation-delay: 2100ms; }
+.info &gt; tspan:nth-child(46) { animation-delay: 2125ms; }
+.info &gt; tspan:nth-child(47) { animation-delay: 2150ms; }
+.info &gt; tspan:nth-child(48) { animation-delay: 2175ms; }
+.info &gt; tspan:nth-child(49) { animation-delay: 2200ms; }
+.info &gt; tspan:nth-child(50) { animation-delay: 2225ms; }
+.info &gt; tspan:nth-child(51) { animation-delay: 2250ms; }
+.info &gt; tspan:nth-child(52) { animation-delay: 2275ms; }
+.info &gt; tspan:nth-child(53) { animation-delay: 2300ms; }
+.info &gt; tspan:nth-child(54) { animation-delay: 2325ms; }
+.info &gt; tspan:nth-child(55) { animation-delay: 2350ms; }
+.info &gt; tspan:nth-child(56) { animation-delay: 2375ms; }
+.info &gt; tspan:nth-child(57) { animation-delay: 2400ms; }
+.info &gt; tspan:nth-child(58) { animation-delay: 2425ms; }
+.info &gt; tspan:nth-child(59) { animation-delay: 2450ms; }
+.info &gt; tspan:nth-child(60) { animation-delay: 2475ms; }
+.info &gt; tspan:nth-child(61) { animation-delay: 2500ms; }
+.info &gt; tspan:nth-child(62) { animation-delay: 2525ms; }
+.info &gt; tspan:nth-child(63) { animation-delay: 2550ms; }
+.info &gt; tspan:nth-child(64) { animation-delay: 2575ms; }
+.info &gt; tspan:nth-child(65) { animation-delay: 2600ms; }
+.info &gt; tspan:nth-child(66) { animation-delay: 2625ms; }
+.info &gt; tspan:nth-child(67) { animation-delay: 2650ms; }
+.info &gt; tspan:nth-child(68) { animation-delay: 2675ms; }
+.info &gt; tspan:nth-child(69) { animation-delay: 2700ms; }
+.info &gt; tspan:nth-child(70) { animation-delay: 2725ms; }
+.info &gt; tspan:nth-child(71) { animation-delay: 2750ms; }
+.info &gt; tspan:nth-child(72) { animation-delay: 2775ms; }
+.info &gt; tspan:nth-child(73) { animation-delay: 2800ms; }
+.info &gt; tspan:nth-child(74) { animation-delay: 2825ms; }
+.info &gt; tspan:nth-child(75) { animation-delay: 2850ms; }
+.info &gt; tspan:nth-child(76) { animation-delay: 2875ms; }
+.info &gt; tspan:nth-child(77) { animation-delay: 2900ms; }
+.info &gt; tspan:nth-child(78) { animation-delay: 2925ms; }
+.info &gt; tspan:nth-child(79) { animation-delay: 2950ms; }
+.info &gt; tspan:nth-child(80) { animation-delay: 2975ms; }
+.info &gt; tspan:nth-child(81) { animation-delay: 3000ms; }
+.info &gt; tspan:nth-child(82) { animation-delay: 3025ms; }
+.info &gt; tspan:nth-child(83) { animation-delay: 3050ms; }
+.info &gt; tspan:nth-child(84) { animation-delay: 3075ms; }
+.info &gt; tspan:nth-child(85) { animation-delay: 3100ms; }
+.info &gt; tspan:nth-child(86) { animation-delay: 3125ms; }
+.info &gt; tspan:nth-child(87) { animation-delay: 3150ms; }
+.info &gt; tspan:nth-child(88) { animation-delay: 3175ms; }
+.info &gt; tspan:nth-child(89) { animation-delay: 3200ms; }
+.info &gt; tspan:nth-child(90) { animation-delay: 3225ms; }
+@media (prefers-reduced-motion: reduce) { .ascii &gt; tspan, .info &gt; tspan, .avatar-cursor { animation: none !important; opacity: 1 !important; transform: none !important; } }
 </style>
 <rect width="985px" height="530px" fill="#f6f8fa" rx="15"/>
 <text x="15" y="30" fill="#24292f" class="ascii" font-size="6.4px">
@@ -146,7 +237,7 @@ text, tspan {white-space: pre;}
 <tspan x="15" y="502" textLength="370.0" lengthAdjust="spacing">                  vUJJxtxkaooo*W8%Mrvqpqqqqqqqqdkhhao*****##MM##okhMBBBBBBBBBBBBBBBBBBB%%%%%%%%%%%%%%%%B</tspan>
 </text>
 <rect class="avatar-cursor" x="15" y="23" width="7" height="10" fill="#24292f"/>
-<text x="390" y="30" fill="#24292f">
+<text x="390" y="30" fill="#24292f" class="info">
 <tspan x="390" y="30">ryan@make</tspan> -———————————————————————————————————————-————————
 <tspan x="390" y="50" class="cc">. </tspan><tspan class="key">OS</tspan>:<tspan class="cc"> ............................ </tspan><tspan class="value">Windows 11, Fedora Linux</tspan>
 <tspan x="390" y="70" class="cc">. </tspan><tspan class="key">Role</tspan>:<tspan class="cc"> .................................. </tspan><tspan class="value">Developer Intern</tspan>
