@@ -104,19 +104,53 @@ def _cover_crop(img, aspect):
 
 
 def _fit_contain(img, disp_w, disp_h):
-    """Scale full image into display-pixel box, pad with black, no distortion."""
+    """Scale full image into display-pixel box, transparent pad, no distortion."""
     w, h = img.size
     scale = min(disp_w / w, disp_h / h)
     nw, nh = max(1, round(w * scale)), max(1, round(h * scale))
     thumb = img.resize((nw, nh), Image.LANCZOS)
-    canvas = Image.new("RGB", (disp_w, disp_h), (0, 0, 0))
-    canvas.paste(thumb, ((disp_w - nw) // 2, (disp_h - nh) // 2))
+    canvas = Image.new("RGBA", (disp_w, disp_h), (0, 0, 0, 0))
+    pos = ((disp_w - nw) // 2, (disp_h - nh) // 2)
+    if "A" in thumb.getbands():
+        canvas.paste(thumb, pos, thumb)
+    else:
+        canvas.paste(thumb, pos)
     return canvas
 
 
+def remove_background(data, model="u2net_human_seg", threshold=128, disable=False):
+    """Strip background via rembg. Returns PNG bytes, original on any failure."""
+    if disable:
+        print("bg: removal disabled, keeping background")
+        return data
+    try:
+        from rembg import new_session, remove
+    except ImportError:
+        print("bg: rembg not installed, keeping background")
+        return data
+    try:
+        out = remove(
+            Image.open(io.BytesIO(data)), session=new_session(model)
+        ).convert("RGBA")
+    except Exception as exc:
+        print(f"bg: removal failed ({exc}), keeping background")
+        return data
+    alpha = out.getchannel("A").tobytes()
+    frac = sum(b >= threshold for b in alpha) / len(alpha)
+    if not 0.05 <= frac <= 0.95:
+        print(f"bg: subject {frac:.0%} outside guard, keeping background")
+        return data
+    buf = io.BytesIO()
+    out.save(buf, format="PNG")
+    print(f"bg: removed with {model}, subject {frac:.0%}")
+    return buf.getvalue()
+
+
 def image_to_lines(data, width, height, charset=CHARSET, invert=False,
-                   fit="cover", cell_w=None, row_step=None):
-    img = Image.open(io.BytesIO(data)).convert("RGB")
+                   fit="cover", cell_w=None, row_step=None, bg_threshold=128):
+    # RGBA throughout: transparent pixels (removed background, padding)
+    # always map to space, subject maps by luminance.
+    img = Image.open(io.BytesIO(data)).convert("RGBA")
     if cell_w and row_step:
         # Grid cells are tall narrow (textLength per column vs row step),
         # so resample in display-pixel space. Skipping this stretches art.
@@ -128,13 +162,17 @@ def image_to_lines(data, width, height, charset=CHARSET, invert=False,
             img = _cover_crop(img, disp_w / disp_h)
     gray = ImageOps.autocontrast(img.convert("L"), cutoff=1)
     gray = gray.resize((width, height), Image.LANCZOS)
+    alpha = img.getchannel("A").resize((width, height), Image.LANCZOS)
     chars = charset if not invert else charset[::-1]
     last = len(chars) - 1
     pixels = list(gray.tobytes())
+    alphas = list(alpha.tobytes())
     lines = []
     for row in range(height):
         line = "".join(
-            chars[round(pixels[row * width + col] / 255 * last)]
+            " "
+            if alphas[row * width + col] < bg_threshold
+            else chars[round(pixels[row * width + col] / 255 * last)]
             for col in range(width)
         )
         lines.append(line.ljust(width)[:width])
@@ -183,6 +221,9 @@ def parse_args(argv=None):
     parser.add_argument("--invert", action="store_true")
     parser.add_argument("--avatar-url", default=None)
     parser.add_argument("--fit", choices=("cover", "contain"), default="cover")
+    parser.add_argument("--no-remove-bg", action="store_true")
+    parser.add_argument("--bg-model", default="u2net_human_seg")
+    parser.add_argument("--bg-threshold", type=int, default=128)
     return parser.parse_args(argv)
 
 
@@ -197,8 +238,15 @@ def main(argv=None):
     data, url = fetch_avatar(username, args.avatar_url)
     digest = hashlib.sha256(data).hexdigest()[:12]
     print(f"avatar: {url} ({len(data)} bytes, sha {digest})")
+    data = remove_background(
+        data,
+        model=args.bg_model,
+        threshold=args.bg_threshold,
+        disable=args.no_remove_bg,
+    )
     lines = image_to_lines(
-        data, width, height, args.charset, args.invert, args.fit, cell_w, row_step
+        data, width, height, args.charset, args.invert, args.fit,
+        cell_w, row_step, args.bg_threshold,
     )
     for path in (args.dark, args.light):
         rows, cols = write_grid(path, lines)

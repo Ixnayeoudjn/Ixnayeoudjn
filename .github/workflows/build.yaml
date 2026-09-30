@@ -25,6 +25,13 @@ jobs:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/cache/requirements.txt') }}
           restore-keys: ${{ runner.os }}-pip-
+      - name: Cache background-removal model
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.u2net
+            ~/.rembg
+          key: ${{ runner.os }}-u2net-u2net_human_seg-v1
       - name: Install dependencies
         run: python -m pip install -r cache/requirements.txt
       - name: Update avatar ASCII art
